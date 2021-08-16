@@ -1,12 +1,13 @@
 <template>
     <ul class="sidenav app-sidenav" :class="{open: modelValue}">
-        <li v-for="link in links" :key="link.url">
-            <router-link
-                    active-class="active"
-                    :to="link.url">
-                {{link.title}}
-            </router-link>
-        </li>
+        <router-link  v-for="link in links" :key="link.url"
+                :to="link.url"
+                custom
+                v-slot="{ href, navigate, isActive,}">
+            <li :class="[isActive && 'active']">
+                <a :href="href" @click="navigate">{{ link.title }}</a>
+            </li>
+        </router-link>
     </ul>
 </template>
 

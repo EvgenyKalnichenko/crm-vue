@@ -5,7 +5,7 @@
                 <a href="#" @click.prevent="$emit('navbarToggle')">
                     <i class="material-icons black-text">dehaze</i>
                 </a>
-                <span class="black-text">12.12.12</span>
+                <span class="black-text">{{date}}</span>
             </div>
             <ul class="right hide-on-small-and-down">
                 <li>
@@ -13,6 +13,7 @@
                             class="dropdown-trigger black-text"
                             href="#"
                             data-target="dropdown"
+                            @click.prevent=""
                     >
                         USER NAME
                         <i class="material-icons right">arrow_drop_down</i>
@@ -20,13 +21,16 @@
 
                     <ul id='dropdown' class='dropdown-content'>
                         <li>
-                            <a href="#" class="black-text">
+                            <router-link
+                                    class="black-text"
+                                    to="/Profile"
+                            >
                                 <i class="material-icons">account_circle</i>Профиль
-                            </a>
+                            </router-link>
                         </li>
                         <li class="divider" tabindex="-1"></li>
                         <li>
-                            <a href="#" class="black-text">
+                            <a href="#" class="black-text" @click.prevent="logout">
                                 <i class="material-icons">assignment_return</i>Выйти
                             </a>
                         </li>
@@ -36,10 +40,56 @@
         </div>
     </nav>
 </template>
-
+<!--data-target="dropdown"-->
 <script>
+    import M from 'materialize-css'
     export default {
-        name: "Navbar"
+        name: "Navbar",
+        data(){
+          return{
+              date: this.dateFilter(new Date(), 'datetime'),
+              interval: null,
+              dropdown: null
+          }
+        },
+        methods:{
+            logout(){
+                console.log('logout')
+                this.$router.push('/login?message=')
+            },
+            dateFilter(value, format = 'date'){
+                const options = {}
+
+                if(format.includes('date')){
+                    options.day = '2-digit'
+                    options.month = 'long'
+                    options.year = 'numeric'
+                }
+
+                if(format.includes('time')){
+                    options.hour = '2-digit'
+                    options.minute = '2-digit'
+                    options.second = '2-digit'
+                }
+
+                return new Intl.DateTimeFormat('ru',options).format(value)
+            }
+        },
+        mounted() {
+            this.dropdown = M.Dropdown.init(document.querySelector('.dropdown-trigger'),{
+                constrainWidth: true
+            })
+            this.interval = setInterval(()=> {
+                this.date = this.dateFilter(new Date(), 'datetime');
+            },1000)
+        },
+        unmounted() {
+            console.log('unmounted')
+            clearInterval(this.interval);
+            if(this.dropdown && this.dropdown.destroy){
+                this.dropdown.destroy()
+            }
+        }
     }
 </script>
 
