@@ -54,8 +54,7 @@
         },
         methods:{
             logout(){
-                console.log('logout')
-                this.$router.push('/login?message=')
+                this.$router.push('/login?message=logout')
             },
             dateFilter(value, format = 'date'){
                 const options = {}
