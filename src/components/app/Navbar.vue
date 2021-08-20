@@ -44,12 +44,13 @@
 <script>
     import M from 'materialize-css'
     import {mapActions} from "vuex";
+    import dateFilter from "../../utils/dateFilter";
 
     export default {
         name: "Navbar",
         data(){
           return{
-              date: this.dateFilter(new Date(), 'datetime'),
+              date: dateFilter(new Date(), 'datetime'),
               interval: null,
               dropdown: null
           }
@@ -60,30 +61,13 @@
                 this.logout();
                 this.$router.push('/login?message=logout')
             },
-            dateFilter(value, format = 'date'){
-                const options = {}
-
-                if(format.includes('date')){
-                    options.day = '2-digit'
-                    options.month = 'long'
-                    options.year = 'numeric'
-                }
-
-                if(format.includes('time')){
-                    options.hour = '2-digit'
-                    options.minute = '2-digit'
-                    options.second = '2-digit'
-                }
-
-                return new Intl.DateTimeFormat('ru',options).format(value)
-            }
         },
         mounted() {
             this.dropdown = M.Dropdown.init(document.querySelector('.dropdown-trigger'),{
                 constrainWidth: true
             })
             this.interval = setInterval(()=> {
-                this.date = this.dateFilter(new Date(), 'datetime');
+                this.date = dateFilter(new Date(), 'datetime');
             },1000)
         },
         unmounted() {

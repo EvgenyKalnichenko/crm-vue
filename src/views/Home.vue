@@ -3,57 +3,58 @@
         <div class="page-title">
             <h3>Счет</h3>
 
-            <button class="btn waves-effect waves-light btn-small">
+            <button class="btn waves-effect waves-light btn-small"
+                @click="refresh"
+            >
                 <i class="material-icons">refresh</i>
             </button>
         </div>
-
-        <div class="row">
-            <div class="col s12 m6 l4">
-                <div class="card light-blue bill-card">
-                    <div class="card-content white-text">
-                        <span class="card-title">Счет в валюте</span>
-
-                        <p class="currency-line">
-                            <span>12.0 Р</span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col s12 m6 l8">
-                <div class="card orange darken-3 bill-card">
-                    <div class="card-content white-text">
-                        <div class="card-header">
-                            <span class="card-title">Курс валют</span>
-                        </div>
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>Валюта</th>
-                                <th>Курс</th>
-                                <th>Дата</th>
-                            </tr>
-                            </thead>
-
-                            <tbody>
-                            <tr>
-                                <td>руб</td>
-                                <td>12121</td>
-                                <td>12.12.12</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+        <Loader v-if="loading"/>
+        <div class="row" v-else>
+            <HomeBill
+                :rates="this.$store.currency.rates"
+            />
+            <HomeCurrency
+                :rates="this.$store.currency.rates"
+                :date="this.$store.currency.date"
+            />
         </div>
     </div>
 </template>
 
 <script>
+    import HomeBill from "../components/HomeBill";
+    import HomeCurrency from "../components/HomeCurrency";
+    import Loader from "../components/app/Loader";
+    import {mapActions} from "vuex";
+
     export default {
-        name: "Home"
+        name: "Home",
+        data(){
+            return{
+                loading: true,
+            }
+        },
+        methods:{
+            ...mapActions(['fetchCurrency']),
+            async refresh(){
+                this.loading = true;
+                this.$store.currency = await this.fetchCurrency();
+                this.loading = false;
+            }
+        },
+        async mounted() {
+            if(!this.$store.currency){
+                this.$store.currency = await this.fetchCurrency();
+                // console.log(this.$store.currency);
+            }
+            this.loading = false
+        },
+        components:{
+            Loader,
+            HomeBill,
+            HomeCurrency
+        }
     }
 </script>
 

@@ -11,12 +11,12 @@ export default {
         }
     },
     mutations:{
-        ...mapMutations(['setError']),
+        ...mapMutations('info', ['clearInfo']),
     },
     actions:{
         async login(context, {email, password}){
             try{
-                console.log(email, password)
+                // console.log(email, password)
                 await firebase.auth().signInWithEmailAndPassword(email, password)
             }catch (e) {
                 store.commit('setError', e)
@@ -25,6 +25,7 @@ export default {
         },
         async logout(){
             await firebase.auth().signOut();
+            store.commit('info/clearInfo');
         },
         async register({dispatch, commit}, {email, password, name}){
             try{

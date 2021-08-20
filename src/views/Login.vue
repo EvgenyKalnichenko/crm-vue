@@ -90,7 +90,7 @@
                 }
 
                 try{
-                    console.log(formData)
+                    // console.log(formData)
                     await this.login(formData);
                     this.$router.push('/');
                 }catch (e) {
@@ -102,7 +102,6 @@
             if(messages[this.$route.query.message]){
                 this.$message(messages[this.$route.query.message])
             }
-
         }
     }
 </script>
