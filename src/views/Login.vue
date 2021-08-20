@@ -88,9 +88,9 @@
                     email: this.email,
                     password: this.password
                 }
-                // console.log(formData)
 
                 try{
+                    console.log(formData)
                     await this.login(formData);
                     this.$router.push('/');
                 }catch (e) {

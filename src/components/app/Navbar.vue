@@ -30,7 +30,7 @@
                         </li>
                         <li class="divider" tabindex="-1"></li>
                         <li>
-                            <a href="#" class="black-text" @click.prevent="logout">
+                            <a href="#" class="black-text" @click.prevent="exit">
                                 <i class="material-icons">assignment_return</i>Выйти
                             </a>
                         </li>
@@ -43,6 +43,8 @@
 <!--data-target="dropdown"-->
 <script>
     import M from 'materialize-css'
+    import {mapActions} from "vuex";
+
     export default {
         name: "Navbar",
         data(){
@@ -53,7 +55,9 @@
           }
         },
         methods:{
-            logout(){
+            ...mapActions('auth', ['logout']),
+            exit(){
+                this.logout();
                 this.$router.push('/login?message=logout')
             },
             dateFilter(value, format = 'date'){
