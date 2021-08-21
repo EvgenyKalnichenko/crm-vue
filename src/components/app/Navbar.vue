@@ -15,7 +15,7 @@
                             data-target="dropdown"
                             @click.prevent=""
                     >
-                        USER NAME
+                        {{info.name}}
                         <i class="material-icons right">arrow_drop_down</i>
                     </a>
 
@@ -43,7 +43,7 @@
 <!--data-target="dropdown"-->
 <script>
     import M from 'materialize-css'
-    import {mapActions} from "vuex";
+    import {mapActions, mapGetters} from "vuex";
     import dateFilter from "../../utils/dateFilter";
 
     export default {
@@ -52,7 +52,7 @@
           return{
               date: dateFilter(new Date(), 'datetime'),
               interval: null,
-              dropdown: null
+              dropdown: null,
           }
         },
         methods:{
@@ -69,6 +69,9 @@
             this.interval = setInterval(()=> {
                 this.date = dateFilter(new Date(), 'datetime');
             },1000)
+        },
+        computed:{
+            ...mapGetters('info', ['info']),
         },
         unmounted() {
             console.log('unmounted')
