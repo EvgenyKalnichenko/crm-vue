@@ -1,50 +1,53 @@
 <template>
-    <div>
-        <div class="page-title">
-            <h3>История записей</h3>
-        </div>
-
+    <div class="page-title">
+        <h3>История записей</h3>
+    </div>
+    <Loader v-if="loading"/>
+    <p v-else-if="!records.length">Записей пока нет <router-link to="/record">добавьте новую запись</router-link></p>
+    <template v-else>
         <div class="history-chart">
             <canvas></canvas>
         </div>
-
-        <section>
-            <table>
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Сумма</th>
-                    <th>Дата</th>
-                    <th>Категория</th>
-                    <th>Тип</th>
-                    <th>Открыть</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>1212</td>
-                    <td>12.12.32</td>
-                    <td>name</td>
-                    <td>
-                        <span class="white-text badge red">Расход</span>
-                    </td>
-                    <td>
-                        <button class="btn-small btn">
-                            <i class="material-icons">open_in_new</i>
-                        </button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </section>
-    </div>
+        <HistoryTable  :records='records'/>
+    </template>
 </template>
 
 <script>
+    import HistoryTable from "../components/HistoryTable";
+    import {mapActions} from "vuex";
+    import Loader from "../components/app/Loader";
+
     export default {
-        name: "History"
+        name: "History",
+        data(){
+          return{
+              loading: true,
+              records:[],
+              categories:[]
+          }
+        },
+        methods:{
+            ...mapActions(['fetchCategory']),
+            ...mapActions('record', ['fetchRecords']),
+        },
+        async mounted() {
+            // this.records = await this.fetchRecords();
+
+            const records = await this.fetchRecords();
+            this.categories = await this.fetchCategory();
+
+            this.records = records.map(record => {
+                return{
+                    ...record,
+                    categoryName: this.categories.find(c => c.id === record.categoryId).title,
+                    typeClass: record.type === 'income' ? 'green' : 'red',
+                    typeText: record.type === 'income' ? 'Доход' : 'Расход',
+                }
+            })
+
+            this.loading = false;
+        },
+        components: {Loader, HistoryTable}
     }
 </script>
 
