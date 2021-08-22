@@ -68,8 +68,6 @@
                 const tooltipValue = category.limit - spend;
                 const tooltip = `${tooltipValue < 0 ? 'Превышение на': 'Осталось'} ${currencyFilter(Math.abs(tooltipValue))}`;
 
-
-                console.log(this.categories)
                 return{
                     ...category,
                     progressPercent,
