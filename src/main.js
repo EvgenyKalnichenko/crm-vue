@@ -3,10 +3,12 @@ import App from './App.vue';
 import router from "./router";
 import store from './store';
 import messagePligin from './utils/message.plugin';
+import tooltipDirective from './directives/tooltip.directive'
 
 import firebase from "firebase/app";
 import 'firebase/auth';
 import 'firebase/database'
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyBPyHlC4TaEyqBM4_8hFbp_acDXzrMHRpU",
@@ -29,6 +31,7 @@ firebase.auth().onAuthStateChanged(() => {
             .use(messagePligin)
             .use(store)
             .use(router)
+            .directive('tooltip', tooltipDirective)
             .mount('#app')
     }
 });
